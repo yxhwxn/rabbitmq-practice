@@ -109,7 +109,7 @@ step04에서 확인할 점
 
 ---
 
-### (참고) Binding Key vs. Routing Key
+### (Appendix 2) Binding Key vs. Routing Key
 
 | 항목 | routingKey | bindingKey |
 | --- | --- | --- |
@@ -118,3 +118,8 @@ step04에서 확인할 점
 | 어떤 역할? | 메시지가 어떤 "주소"로 갈지를 지정 | 어떤 라우팅 키의 메시지를 수신할지를 결정 |
 | 적용 Exchange | `direct`, `topic` 등에서 중요 | `direct`, `topic` 등에서 필수 조건 |
 | 예시 | `"quick.orange.rabbit"` | `"*.orange.*"` or `"quick.#"` |
+
+### (Appendix 2) 데이터 유실 없이 더 강력한 영속성을 보장하는 방법은?
+
+[📚 Consumer Acknowledgements and Publisher Confirms | RabbitMQ](https://www.rabbitmq.com/docs/confirms)
+
