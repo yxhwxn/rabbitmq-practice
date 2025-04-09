@@ -1,6 +1,8 @@
 **모든 실습은 [RabbitMQ Get Started 섹션](https://www.rabbitmq.com/tutorials/tutorial-one-java)을 참고하여 진행합니다.**
 </br>
 
+---
+
 > Step01: Publisher - Consumer 단순 패턴 구현
 
 * Receiver - 메시지 소비자(Consumer)
@@ -24,7 +26,11 @@
 * Worker를 여러개 실행시키고 NewTask를 전송하면
   * 여러개의 Worker가 작업을 나누어 처리하는 모습을 확인할 수 있음
 
+---
+
 > Step03: Publisher - Subscribe 구조 기반 Event 메시지 브로커
+
+<img width="192" alt="Image" src="https://github.com/user-attachments/assets/434cb320-14bc-4f1b-abcd-a80893423e94" />
 
 - Exchange
   - Publisher가 보낸 메시지를 소비자(Consumer)에게 어떻게 전달할지 결정하는 라우팅 허브
@@ -38,7 +44,7 @@
         lazy.#.rabbit
         ```
 
-✅ Step03에서는 fanout exchange를 사용하여 pub-sub 구조를 구현한다.
+_✅ Step03에서는 `fanout` exchange를 사용하여 pub-sub 구조를 구현한다._
 </br>
 
 ```
@@ -51,7 +57,7 @@
 - 실행방법
   1. ReceiveLogs를 여러 개 실행(각각 다른 터미널에서 실행)
   2. EmitLog 실행(메시지 전송)
-  3. 구독된 경로에 따라 브로드캐스팅 되는 구조 확인
+  3. fanout exchange로 설정을 해두었기 때문에, 모든 큐가 브로드캐스팅 되는 지 확인
 
 ### 정리
 
