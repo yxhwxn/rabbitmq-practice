@@ -24,7 +24,7 @@ public class Worker {
         channel.queueDeclare(TASK_QUEUE_NAME, false, false, false, null);
         System.out.println("[Consumer(Worker)] 메시지를 기다리는 중..");
 
-        // TODO: channel.basicQos(1);
+        channel.basicQos(1);
 
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
             // 메시지 추출
@@ -35,11 +35,12 @@ public class Worker {
                 doWork(message); // 받은 메시지 처리 작업 수행
             } finally {
                 System.out.println(" [Consumer(Worker)] Done");
-
+                channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
             }
         };
 
-        channel.basicConsume(TASK_QUEUE_NAME, false, deliverCallback, consumerTag -> { });
+        boolean autoAcknowledgement = false;
+        channel.basicConsume(TASK_QUEUE_NAME, autoAcknowledgement, deliverCallback, consumerTag -> { });
     }
 
     // Task 처리 메서드, Hello...일 경우 .하나당 1초씩 지연해서 처리해야함
