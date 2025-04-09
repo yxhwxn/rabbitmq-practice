@@ -85,6 +85,8 @@ _✅ Step03에서는 `fanout` exchange를 사용하여 pub-sub 구조를 구현�
 
 > Step04: Topic Exchange 기반의 PUB-SUB 구조
 
+<img width="319" alt="Image" src="https://github.com/user-attachments/assets/d3be22c3-99a6-491c-8767-eb4b8e3b4130" />
+
 - Exchange 타입: `topic`
 - `Routing key`에 따라 메시지를 다른 큐로 전달
 - 패턴 기반 매칭: * (단어 하나), # (0개 이상 단어)
@@ -104,3 +106,15 @@ step04에서 확인할 점
 
 - ReceiveLogsTopic "quick.#"는 quick.orange.rabbit, quick.brown.fox 등 prefix가 quick인 메시지를 수신
 ```
+
+---
+
+### (참고) Binding Key vs. Routing Key
+
+| 항목 | routingKey | bindingKey |
+| --- | --- | --- |
+| 누가 설정함? | **Producer (EmitLogTopic)** | **Consumer 쪽 큐 설정 시 (ReceiveLogsTopic)** |
+| 언제 사용됨? | 메시지를 **보낼 때** | 큐를 익스체인지에 **바인딩할 때** |
+| 어떤 역할? | 메시지가 어떤 "주소"로 갈지를 지정 | 어떤 라우팅 키의 메시지를 수신할지를 결정 |
+| 적용 Exchange | `direct`, `topic` 등에서 중요 | `direct`, `topic` 등에서 필수 조건 |
+| 예시 | `"quick.orange.rabbit"` | `"*.orange.*"` or `"quick.#"` |
