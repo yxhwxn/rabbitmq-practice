@@ -24,6 +24,7 @@ public class Worker {
         channel.queueDeclare(TASK_QUEUE_NAME, false, false, false, null);
         System.out.println("[Consumer(Worker)] 메시지를 기다리는 중..");
 
+        // basicQos(1) - 한 번에 하나의 메시지만 처리
         channel.basicQos(1);
 
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
@@ -35,10 +36,12 @@ public class Worker {
                 doWork(message); // 받은 메시지 처리 작업 수행
             } finally {
                 System.out.println(" [Consumer(Worker)] Done");
+                // 메시지 처리 완료 후 ACK
                 channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
             }
         };
 
+        // autoAcknowledgement의 기본값은 true
         boolean autoAcknowledgement = false;
         channel.basicConsume(TASK_QUEUE_NAME, autoAcknowledgement, deliverCallback, consumerTag -> { });
     }
