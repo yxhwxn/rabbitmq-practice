@@ -19,16 +19,29 @@
   * ex. Hello...이라고 하면
   * .(dot) 하나는 1초가 소요되는 작업이라고 가정
     * 따라서 Hello...는 3초가 걸리는 작업이라고 가정
-        * 실행 인자값(args) 활용해서 Hello...과 같은 값 입력
+      * 실행 인자값(args) 활용해서 Hello...과 같은 값 입력
 </br>
 
+- step02 정리
+  - durable
+    - RabbitMQ 서버가 재시작되더라도 큐와 메시지가 유지되도록 설정
+    - durable=true로 설정하면, 큐가 재시작되더라도 메시지가 유지됨
+  - basicQos(1)
+    - RabbitMQ가 소비자마다 1개씩 메시지를 전달하는 방식으로 설정
+    - RabbitMQ는 기본적으로 round-robin 방식으로 메시지를 전달
+      - 즉, 소비자에게 메시지를 전달할 때, 큐에 있는 메시지를 순서대로 전달 
+  - prefetchCount
+    - RabbitMQ가 한 번에 소비자에게 전달할 수 있는 메시지의 개수
+    - 기본값은 1로 설정되어 있음
+    - prefetchCount=1로 설정하면, 소비자가 작업을 완료하기 전까지 다른 소비자에게 메시지를 전달하지 않음
 
-* Worker를 여러개 실행시키고 NewTask를 전송하면
-  * 여러개의 Worker가 작업을 나누어 처리하는 모습을 확인할 수 있음
+- 실행방법
+  1. Worker를 여러개 실행시키고 NewTask를 전송
+  2. 여러개의 Worker가 작업을 나누어 처리하는 구조 확인
 
 ---
 
-> Step03: Publisher - Subscribe 구조 기반 Event 메시지 브로커
+> Step03: Fanout Exchange 기반의 PUB-SUB 구조
 
 <img width="192" alt="Image" src="https://github.com/user-attachments/assets/434cb320-14bc-4f1b-abcd-a80893423e94" />
 
@@ -67,3 +80,27 @@ _✅ Step03에서는 `fanout` exchange를 사용하여 pub-sub 구조를 구현�
 | `Exchange`   | 메시지를 큐에 분배하는 중간 라우팅 허브          |
 | `fanout`     | Exchange의 타입(전파 방식)             |
 | `logs`       | Exchange의 이름 (네이밍은 개발자가 임의로 정함) |
+
+---
+
+> Step04: Topic Exchange 기반의 PUB-SUB 구조
+
+- Exchange 타입: `topic`
+- `Routing key`에 따라 메시지를 다른 큐로 전달
+- 패턴 기반 매칭: * (단어 하나), # (0개 이상 단어)
+
+예시:
+```
+kern.* → kern.critical, kern.info는 매칭 / kern.system.error는 ❌
+
+*.orange.* → quick.orange.rabbit만 매칭
+
+lazy.# → lazy.orange.rabbit, lazy.brown.fox, lazy 등 다 매칭
+```
+
+step04에서 확인할 점
+```
+- ReceiveLogsTopic "*.orange.*"는 quick.orange.rabbit 메시지를 수신
+
+- ReceiveLogsTopic "quick.#"는 quick.orange.rabbit, quick.brown.fox 등 prefix가 quick인 메시지를 수신
+```
